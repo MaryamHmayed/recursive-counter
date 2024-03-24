@@ -13,7 +13,7 @@ const RecursiveCounter = (number,onChange) => {
     const removeChild = () => {
         const new_number = number - 1;
         onChange(new_number);
-        setChildren(children.slice(0, -1));
+        setChildren(children.slice(0, (children.length-1)));
         };
     
 
