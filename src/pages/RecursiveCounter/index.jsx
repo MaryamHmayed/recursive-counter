@@ -1,35 +1,39 @@
-import React from "react";
-import  "./style.css";
-import {  useState } from "react";
+import React, { useState } from "react";
+import "./style.css";
 
-const RecursiveCounter = (number,onChange) => {
-    const [children,setChildren]=useState([])
+const RecursiveCounter = ({ initialValue }) => {
+  const [number, setNumber] = useState(initialValue);
+  const [children, setChildren] = useState([]);
 
-    const addChild=()=>{
-        const new_number = number + 1;
-        onChange(new_number);
-        setChildren([...children, <RecursiveCounter key={new_number} number={new_number} onChange={onChange} />]);
-        } ;
-    const removeChild = () => {
-        const new_number = number - 1;
-        onChange(new_number);
-        setChildren(children.slice(0, (children.length-1)));
-        };
+  const addChild = () => {
     
+    if (children.length > 0) {
+      setNumber(prevNumber => prevNumber - 1); 
 
-    return (
-      <>
+    }
+    let newNumber = number;
+    setChildren(prevChildren => [
+      ...prevChildren,
+      <RecursiveCounter key={newNumber} initialValue={newNumber} />
+    ]);
+  };
+
+  const removeSelf = () => {
+    setChildren(prevChildren => prevChildren.filter((_, index) => index !== prevChildren.length - 1));
+  };
+
+  return (
+    <div>
       <div>
-        <button onClick={addChild}>+</button>
-        <button onClick={removeChild}>-</button>
         {number}
+        <button onClick={addChild}>+</button>
+        {children.length > 0 && <button onClick={removeSelf}>-</button>}
       </div>
-      <div>
+      <div style={{ marginLeft: '20px' }}>
         {children}
       </div>
-      </>
-    )
-
-}
+    </div>
+  );
+};
 
 export default RecursiveCounter;
